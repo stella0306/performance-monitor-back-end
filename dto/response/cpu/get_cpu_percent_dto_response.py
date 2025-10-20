@@ -4,6 +4,7 @@ from pydantic import BaseModel
 class GetCPUPercentDtoResponse(BaseModel):
     cpu_percent: float = 0.0
     interval: float = 0.0
+    interval_state: str = "off"
     status_code: int = 0
     status_message: str = ""
     start_time: str = ""

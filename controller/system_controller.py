@@ -19,9 +19,11 @@ class SystemController:
     # 초 단위로 측정된 cpu 사용률의 평균 결과를 반환 
     async def get_cpu_percent(
             self, 
-            interval: float = Query(default=0.5, description="CPU 측정 간격(초 단위)")
+            interval: float = Query(default=0.5, description="CPU 측정 간격(초 단위)"),
+            interval_state: str = Query(default="off", description="CPU 측정 interval on/off 설정")
+
             ) -> GetCPUPercentDtoResponse:
         
         return await self.system_service.get_cpu_percent(
-            getCPUPercentDtoRequest=GetCPUPercentDtoRequest(interval=interval)
+            getCPUPercentDtoRequest=GetCPUPercentDtoRequest(interval=interval, interval_state=interval_state)
         )
