@@ -45,6 +45,6 @@ class SystemController:
 
         # status_code를 포함하여 JSON 응답 반환
         return JSONResponse(
-            status_code=response_dto.get["status_code"],
+            status_code=response_dto["status_code"],
             content=response_dto
         )

@@ -20,6 +20,7 @@ class SystemServiceImpl(SystemService):
         percpu_state: 'on' → 코어별 사용률 / 'off' → 전체 평균 사용률
         """
 
+        # 기본 변수 초기화
         interval = getCPUPercentDtoRequest.interval
         interval_state = str(getCPUPercentDtoRequest.interval_state).strip().lower()
         percpu_state = str(getCPUPercentDtoRequest.percpu_state).strip().lower()
