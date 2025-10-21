@@ -7,3 +7,6 @@ print(a)
 
 b = psutil.cpu_count(logical=True)
 print(b)
+
+c = psutil.virtual_memory()
+print(c)

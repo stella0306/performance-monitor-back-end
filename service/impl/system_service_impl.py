@@ -5,6 +5,7 @@ from dto.request.cpu.get_cpu_percent_dto_request import GetCPUPercentDtoRequest
 from dto.request.cpu.get_cpu_count_dto_request import GetCPUCountDtoRequest
 from dto.response.cpu.get_cpu_percent_dto_response import GetCPUPercentDtoResponse
 from dto.response.cpu.get_cpu_count_dto_response import GetCPUCountDtoResponse
+from dto.response.memory.get_virtual_memory_dto_response import GetVirtualMemoryDtoResponse
 from service.system_service import SystemService
 from config.decorators.measure_time import MeasureTime
 
@@ -132,6 +133,49 @@ class SystemServiceImpl(SystemService):
         return GetCPUCountDtoResponse(
             cpu_count=cpu_value,
             logical_state=logical_state,
+            status_code=status_code,
+            status_message=status_message,
+            start_time="",
+            end_time="",
+            elapsed_time="",
+        )
+    
+    # 클래스형 함수의 실행 시간을 측정하는 데이코레이터 적용
+    @MeasureTime()
+    async def get_virtual_memory(
+        self
+    ) -> GetVirtualMemoryDtoResponse:
+
+        # 기본 변수 초기화
+        memory_data = {
+            "total_bytes": 0.0,
+            "used_bytes": 0.0,
+            "total_gb": 0.0,
+            "used_gb": 0.0,
+            "percent": 0.0,
+        }
+
+        status_message = "문제 발생"
+        status_code = status.HTTP_404_NOT_FOUND
+
+        memory_value = await asyncio.to_thread(
+                SystemMonitor.get_virtual_memory
+            )
+
+        # 데이터 검사
+        if memory_value is not None:
+            # 메모리 데이터를 업데이트 합니다.
+            memory_data.update(memory_value)
+            status_message = "정상적으로 처리되었습니다."
+            status_code = status.HTTP_200_OK
+
+        # 결과 반환
+        return GetVirtualMemoryDtoResponse(
+            memory_total_bytes=memory_data["memory_total_bytes"],
+            memory_used_bytes=memory_data["memory_used_bytes"],
+            memory_total_gb=memory_data["memory_total_gb"],
+            memory_used_gb=memory_data["memory_used_gb"],
+            memory_percent=memory_data["memory_percent"],
             status_code=status_code,
             status_message=status_message,
             start_time="",

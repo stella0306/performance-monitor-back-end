@@ -19,3 +19,19 @@ class SystemMonitor:
         
         except Exception as e:
             return None
+    
+    # 메모리 사용량을 가져오는 메서드
+    @staticmethod
+    def get_virtual_memory() -> dict | None:
+        try:
+            mem = psutil.virtual_memory()
+            return {
+                "memory_total_bytes": mem.total,
+                "memory_used_bytes": mem.used,
+                "memory_total_gb": round(mem.total / (1024 ** 3), 2),
+                "memory_used_gb": round(mem.used / (1024 ** 3), 2),
+                "memory_percent": mem.percent
+            }
+        
+        except Exception as e:
+            return None
