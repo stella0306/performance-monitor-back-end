@@ -1,5 +1,4 @@
 import psutil
-from datetime import datetime
 
 class SystemMonitor:
 
@@ -9,5 +8,14 @@ class SystemMonitor:
         try:
             return psutil.cpu_percent(interval=interval, percpu=percpu)
 
+        except Exception as e:
+            return None
+
+    # cpu 코어 개수를 가져오는 메서드
+    @staticmethod
+    def get_cpu_count(logical: bool) -> int | None:
+        try:
+            return psutil.cpu_count(logical=logical)
+        
         except Exception as e:
             return None

@@ -4,3 +4,6 @@ import psutil
 
 a = psutil.cpu_percent(interval=0.1, percpu=False)
 print(a)
+
+b = psutil.cpu_count(logical=True)
+print(b)

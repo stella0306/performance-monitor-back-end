@@ -2,7 +2,9 @@ import asyncio
 from fastapi import status
 from utils.system_monitor import SystemMonitor
 from dto.request.cpu.get_cpu_percent_dto_request import GetCPUPercentDtoRequest
+from dto.request.cpu.get_cpu_count_dto_request import GetCPUCountDtoRequest
 from dto.response.cpu.get_cpu_percent_dto_response import GetCPUPercentDtoResponse
+from dto.response.cpu.get_cpu_count_dto_response import GetCPUCountDtoResponse
 from service.system_service import SystemService
 from config.decorators.measure_time import MeasureTime
 
@@ -73,6 +75,63 @@ class SystemServiceImpl(SystemService):
             cpu_percent=cpu_value,
             interval=interval,
             interval_state=interval_state,
+            status_code=status_code,
+            status_message=status_message,
+            start_time="",
+            end_time="",
+            elapsed_time="",
+        )
+    
+
+    # 클래스형 함수의 실행 시간을 측정하는 데이코레이터 적용
+    @MeasureTime()
+    async def get_cpu_count(
+        self, getCPUCountDtoRequest: GetCPUCountDtoRequest
+    ) -> GetCPUCountDtoResponse:
+        """
+        CPU 코어 개수를 반환합니다.
+        logical_state: 'on' → 논리코어 포함 / 'off' → 논리 코어 포함 안 함
+        """
+
+        # 기본 변수 초기화
+        logical_state = str(getCPUCountDtoRequest.logical_state).strip().lower()
+
+        cpu_value = 0.0
+        status_message = "문제 발생"
+        status_code = status.HTTP_404_NOT_FOUND
+
+        # percpu_state 유효성 검사
+        if logical_state not in {"on", "off"}:
+            return GetCPUCountDtoResponse(
+                cpu_count=cpu_value,
+                logical_state=logical_state,
+                status_code=status.HTTP_400_BAD_REQUEST,
+                status_message="logical_state는 'on' 또는 'off'여야 합니다.",
+                start_time="",
+                end_time="",
+                elapsed_time="",
+            )
+
+        # 논리코어 포함 모드
+        if logical_state == "on":
+            cpu_value = await asyncio.to_thread(
+                SystemMonitor.get_cpu_count, True
+            )
+            status_message = "정상적으로 처리되었습니다. (논리 코어 포함, ON)"
+            status_code = status.HTTP_200_OK
+
+        # 논리코어 포함 안 함 모드
+        else:
+            cpu_value = await asyncio.to_thread(
+                SystemMonitor.get_cpu_count, False
+            )
+            status_message = "정상적으로 처리되었습니다. (논리 코어 포함 안 함, OFF)"
+            status_code = status.HTTP_200_OK
+
+        # 결과 반환
+        return GetCPUCountDtoResponse(
+            cpu_count=cpu_value,
+            logical_state=logical_state,
             status_code=status_code,
             status_message=status_message,
             start_time="",
