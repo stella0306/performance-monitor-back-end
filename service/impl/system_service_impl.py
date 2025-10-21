@@ -76,6 +76,7 @@ class SystemServiceImpl(SystemService):
             cpu_percent=cpu_value,
             interval=interval,
             interval_state=interval_state,
+            percpu_state=percpu_state,
             status_code=status_code,
             status_message=status_message,
             start_time="",
