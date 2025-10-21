@@ -148,11 +148,11 @@ class SystemServiceImpl(SystemService):
 
         # 기본 변수 초기화
         memory_data = {
-            "total_bytes": 0.0,
-            "used_bytes": 0.0,
-            "total_gb": 0.0,
-            "used_gb": 0.0,
-            "percent": 0.0,
+            "memory_total_bytes": 0.0,
+            "memory_used_bytes": 0.0,
+            "memory_total_gb": 0.0,
+            "memory_used_gb": 0.0,
+            "memory_percent": 0.0,
         }
 
         status_message = "문제 발생"
@@ -162,12 +162,15 @@ class SystemServiceImpl(SystemService):
                 SystemMonitor.get_virtual_memory
             )
 
-        # 데이터 검사
-        if memory_value is not None:
-            # 메모리 데이터를 업데이트 합니다.
+        # 데이터 유효성 검사
+        if isinstance(memory_value, dict) and all(key in memory_value for key in list(memory_data.keys())):
             memory_data.update(memory_value)
             status_message = "정상적으로 처리되었습니다."
             status_code = status.HTTP_200_OK
+
+        else:
+            status_message = "메모리 데이터가 올바르지 않거나 일부 누락되었습니다."
+            status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
 
         # 결과 반환
         return GetVirtualMemoryDtoResponse(
