@@ -4,3 +4,4 @@ from pydantic import BaseModel
 class GetCPUPercentDtoRequest(BaseModel):
     interval: float = 1.0
     interval_state: str = "off"
+    percpu_state: str = "off"
