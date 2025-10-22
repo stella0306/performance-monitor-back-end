@@ -35,10 +35,12 @@ class SystemServiceImpl(SystemService):
         - percpu_state: 'on' → 코어별 / 'off' → 전체 평균
         """
         try:
+            # 입력값 유효성 검사
             interval_state = self._validate_on_off(getCPUPercentDtoRequest.interval_state, "interval_state")
             percpu_state = self._validate_on_off(getCPUPercentDtoRequest.percpu_state, "percpu_state")
 
         except ValueError as e:
+            # 잘못된 입력 처리
             return GetCPUPercentDtoResponse(
                 cpu_percent=0.0,
                 interval=getCPUPercentDtoRequest.interval,
@@ -57,6 +59,7 @@ class SystemServiceImpl(SystemService):
         status_code = status.HTTP_200_OK
 
         try:
+            # Blocking 모드
             if interval_state == "on":
                 if interval < 0.1:
                     raise ValueError("interval은 0.1 이상이어야 합니다. (Blocking)")
@@ -64,18 +67,22 @@ class SystemServiceImpl(SystemService):
                 cpu_value = await self._run_in_thread(SystemMonitor.get_cpu_percent, interval, percpu_state == "on")
                 status_message = "정상적으로 처리되었습니다. (Blocking)"
 
+            # Non-blocking 모드
             else:
                 cpu_value = await self._run_in_thread(SystemMonitor.get_cpu_percent, None, percpu_state == "on")
                 status_message = "정상적으로 처리되었습니다. (Non-blocking)"
 
         except ValueError as e:
+            # 입력값 오류 처리
             status_message = str(e)
             status_code = status.HTTP_400_BAD_REQUEST
 
         except Exception:
+            # 기타 예외 처리
             status_message = "CPU 사용률을 가져오는 중 오류가 발생했습니다."
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
 
+        # 결과 응답 반환
         return GetCPUPercentDtoResponse(
             cpu_percent=cpu_value,
             interval=interval,
@@ -97,9 +104,11 @@ class SystemServiceImpl(SystemService):
         """
 
         try:
+            # 입력값 유효성 검사
             logical_state = self._validate_on_off(getCPUCountDtoRequest.logical_state, "logical_state")
 
         except ValueError as e:
+            # 잘못된 입력 처리
             return GetCPUCountDtoResponse(
                 cpu_count=0,
                 logical_state=getCPUCountDtoRequest.logical_state,
@@ -110,10 +119,12 @@ class SystemServiceImpl(SystemService):
                 elapsed_time="",
             )
 
+        #  논리 코어 포함 여부 결정
         include_logical = logical_state == "on"
         cpu_count = await self._run_in_thread(SystemMonitor.get_cpu_count, include_logical)
         message = f"정상적으로 처리되었습니다. (논리 코어 {'포함' if include_logical else '제외'})"
 
+        # 결과 반환
         return GetCPUCountDtoResponse(
             cpu_count=cpu_count,
             logical_state=logical_state,
@@ -129,6 +140,7 @@ class SystemServiceImpl(SystemService):
     async def get_virtual_memory(self) -> GetVirtualMemoryDtoResponse:
         """시스템 가상 메모리 정보를 반환합니다."""
 
+        # 기본 구조 초기화
         memory_data = {
             "memory_total_bytes": 0.0,
             "memory_used_bytes": 0.0,
@@ -138,23 +150,29 @@ class SystemServiceImpl(SystemService):
         }
 
         try:
+            # 메모리 정보 수집
             memory_value = await self._run_in_thread(SystemMonitor.get_virtual_memory)
 
+            # 반환값 검증
             if not isinstance(memory_value, dict) or not all(k in memory_value for k in memory_data):
                 raise ValueError("메모리 데이터가 올바르지 않거나 일부 누락되었습니다.")
             
+            # 정상 처리
             memory_data.update(memory_value)
             status_message = "정상적으로 처리되었습니다."
             status_code = status.HTTP_200_OK
 
         except ValueError as e:
+            # 데이터 누락 / 형식 오류
             status_message = str(e)
             status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
 
         except Exception:
+            # 기타 예외 처리
             status_message = "메모리 정보를 가져오는 중 오류가 발생했습니다."
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
 
+        # 결과 응답 반환
         return GetVirtualMemoryDtoResponse(
             memory_total_bytes=memory_data["memory_total_bytes"],
             memory_used_bytes=memory_data["memory_used_bytes"],
