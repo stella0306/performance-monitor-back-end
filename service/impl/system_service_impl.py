@@ -6,7 +6,7 @@ from dto.request.cpu.get_cpu_count_dto_request import GetCPUCountDtoRequest
 from dto.response.cpu.get_cpu_percent_dto_response import GetCPUPercentDtoResponse
 from dto.response.cpu.get_cpu_count_dto_response import GetCPUCountDtoResponse
 from dto.response.memory.get_virtual_memory_dto_response import GetVirtualMemoryDtoResponse
-from dto.response.network.get_net_io_counters_dto_response import GetNetIoCountersDtoDtoResponse
+from dto.response.network.get_net_io_counters_dto_response import GetNetIoCountersDtoResponse
 from service.system_service import SystemService
 from config.decorators.measure_time import MeasureTime
 
@@ -189,7 +189,7 @@ class SystemServiceImpl(SystemService):
     
     # ---------------- 네트워크 사용량 ---------------- #
     @MeasureTime()
-    async def get_net_io_counters(self) -> GetNetIoCountersDtoDtoResponse:
+    async def get_net_io_counters(self) -> GetNetIoCountersDtoResponse:
         """시스템 네트워크 사용량을 반환합니다."""
 
         # 기본 구조 초기화
@@ -232,7 +232,7 @@ class SystemServiceImpl(SystemService):
 
 
         # 결과 응답 반환, 네트워크 다운로드/업로드 값은 Impl에서 계산.
-        return GetNetIoCountersDtoDtoResponse(
+        return GetNetIoCountersDtoResponse(
             old_download_bytes=old_network_value["download_bytes"],
             old_upload_bytes=old_network_value["upload_bytes"],
             new_download_bytes=new_network_value["download_bytes"],

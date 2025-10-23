@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 # 응답 양식, 오류 방지로 기본 값을 지정합니다.
-class GetNetIoCountersDtoDtoResponse(BaseModel):
+class GetNetIoCountersDtoResponse(BaseModel):
     old_download_bytes: int = 0
     old_upload_bytes: int = 0
     new_download_bytes: int = 0
