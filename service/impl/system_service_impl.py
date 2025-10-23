@@ -143,11 +143,11 @@ class SystemServiceImpl(SystemService):
 
         # 기본 구조 초기화
         memory_data = {
-            "memory_total_bytes": 0.0,
-            "memory_used_bytes": 0.0,
-            "memory_total_gb": 0.0,
-            "memory_used_gb": 0.0,
-            "memory_percent": 0.0,
+            "memory_total_bytes",
+            "memory_used_bytes",
+            "memory_total_gb",
+            "memory_used_gb",
+            "memory_percent"
         }
 
         try:
@@ -155,11 +155,15 @@ class SystemServiceImpl(SystemService):
             memory_value = await self._run_in_thread(SystemMonitor.get_virtual_memory)
 
             # 반환값 검증
-            if not isinstance(memory_value, dict) or not all(k in memory_value for k in memory_data):
+            if (
+                not isinstance(memory_value, dict)
+                or not all(k in memory_value for k in memory_data)
+                or any(v is None for v in memory_value.values())
+                ):
+
                 raise ValueError("메모리 데이터가 올바르지 않거나 일부 누락되었습니다.")
             
             # 정상 처리
-            memory_data.update(memory_value)
             status_message = "정상적으로 처리되었습니다."
             status_code = status.HTTP_200_OK
 
@@ -175,11 +179,11 @@ class SystemServiceImpl(SystemService):
 
         # 결과 응답 반환
         return GetVirtualMemoryDtoResponse(
-            memory_total_bytes=memory_data["memory_total_bytes"],
-            memory_used_bytes=memory_data["memory_used_bytes"],
-            memory_total_gb=memory_data["memory_total_gb"],
-            memory_used_gb=memory_data["memory_used_gb"],
-            memory_percent=memory_data["memory_percent"],
+            memory_total_bytes=memory_value["memory_total_bytes"],
+            memory_used_bytes=memory_value["memory_used_bytes"],
+            memory_total_gb=round(memory_value["memory_total_bytes"] / (1024 ** 3), 2),
+            memory_used_gb=round(memory_value["memory_used_bytes"] / (1024 ** 3), 2),
+            memory_percent=memory_value["memory_percent"],
             status_code=status_code,
             status_message=status_message,
             start_time="",
@@ -209,13 +213,22 @@ class SystemServiceImpl(SystemService):
 
 
             # 반환값 검증
-            if not isinstance(old_network_value, dict) or not all(k in old_network_value for k in network_data):
-                raise ValueError("네트워크 데이터가 올바르지 않거나 일부 누락되었습니다. - 1")
-            
-            if not isinstance(new_network_value, dict) or not all(k in new_network_value for k in network_data):
-                raise ValueError("네트워크 데이터가 올바르지 않거나 일부 누락되었습니다. - 2")
-            
+            if (
+                not isinstance(old_network_value, dict)
+                or not all(k in old_network_value for k in network_data)
+                or any(v is None for v in old_network_value.values())
+                ):
 
+                raise ValueError("이전 메모리 데이터가 올바르지 않거나 일부 누락되었습니다.")
+            
+            if (
+                not isinstance(new_network_value, dict)
+                or not all(k in new_network_value for k in network_data)
+                or any(v is None for v in new_network_value.values())
+                ):
+
+                raise ValueError("현재 네트워크 데이터가 올바르지 않거나 일부 누락되었습니다.")
+            
             # 정상 처리
             status_message = "정상적으로 처리되었습니다."
             status_code = status.HTTP_200_OK
