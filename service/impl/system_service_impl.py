@@ -19,13 +19,22 @@ class SystemServiceImpl(SystemService):
         return await asyncio.to_thread(func, *args)
 
     @staticmethod
-    def _validate_on_off(value: str, field_name: str):
+    def _validate_on_off_value(value: str, field_name: str):
         """'on'/'off' 유효성 검사"""
         value = str(value).strip().lower()
         
         if value not in {"on", "off"}:
             raise ValueError(f"{field_name}는 'on' 또는 'off'여야 합니다.")
         return value
+
+    @staticmethod
+    def _is_valid_network_value(value: dict, required_keys: set[str]) -> bool:
+        """네트워크 데이터의 필수 키 존재 및 값 유효성 검증"""
+        return (
+            isinstance(value, dict)
+            and all(k in value for k in required_keys)
+            and all(v is not None for v in value.values())
+        )
 
     # ---------------- CPU 사용률 ---------------- #
     @MeasureTime()
@@ -37,8 +46,8 @@ class SystemServiceImpl(SystemService):
         """
         try:
             # 입력값 유효성 검사
-            interval_state = self._validate_on_off(getCPUPercentDtoRequest.interval_state, "interval_state")
-            percpu_state = self._validate_on_off(getCPUPercentDtoRequest.percpu_state, "percpu_state")
+            interval_state = self._validate_on_off_value(getCPUPercentDtoRequest.interval_state, "interval_state")
+            percpu_state = self._validate_on_off_value(getCPUPercentDtoRequest.percpu_state, "percpu_state")
 
         except ValueError as e:
             # 잘못된 입력 처리
@@ -106,7 +115,7 @@ class SystemServiceImpl(SystemService):
 
         try:
             # 입력값 유효성 검사
-            logical_state = self._validate_on_off(getCPUCountDtoRequest.logical_state, "logical_state")
+            logical_state = self._validate_on_off_value(getCPUCountDtoRequest.logical_state, "logical_state")
 
         except ValueError as e:
             # 잘못된 입력 처리
@@ -120,17 +129,25 @@ class SystemServiceImpl(SystemService):
                 elapsed_time="",
             )
 
-        #  논리 코어 포함 여부 결정
-        include_logical = logical_state == "on"
-        cpu_count = await self._run_in_thread(SystemMonitor.get_cpu_count, include_logical)
-        message = f"정상적으로 처리되었습니다. (논리 코어 {'포함' if include_logical else '제외'})"
+        try:
+            # 논리 코어 포함 여부 결정
+            include_logical = logical_state == "on"
+            cpu_count = await self._run_in_thread(SystemMonitor.get_cpu_count, include_logical)
+            status_message = f"정상적으로 처리되었습니다. (논리 코어 {'포함' if include_logical else '제외'})"
+            status_code = status.HTTP_200_OK
+
+        except Exception:
+            # 기타 예외 처리
+            status_message = "CPU 코어 개수를 가져오는 중 오류가 발생했습니다."
+            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+
 
         # 결과 반환
         return GetCPUCountDtoResponse(
             cpu_count=cpu_count,
             logical_state=logical_state,
-            status_code=status.HTTP_200_OK,
-            status_message=message,
+            status_code=status_code,
+            status_message=status_message,
             start_time="",
             end_time="",
             elapsed_time="",
@@ -213,22 +230,12 @@ class SystemServiceImpl(SystemService):
 
 
             # 반환값 검증
-            if (
-                not isinstance(old_network_value, dict)
-                or not all(k in old_network_value for k in network_data)
-                or any(v is None for v in old_network_value.values())
+            if not (
+                SystemServiceImpl._is_valid_network_value(value=old_network_value, required_keys=network_data)
+                and SystemServiceImpl._is_valid_network_value(value=new_network_value, required_keys=network_data)
                 ):
+                raise ValueError("네트워크 데이터가 올바르지 않거나 일부 누락되었습니다.")
 
-                raise ValueError("이전 메모리 데이터가 올바르지 않거나 일부 누락되었습니다.")
-            
-            if (
-                not isinstance(new_network_value, dict)
-                or not all(k in new_network_value for k in network_data)
-                or any(v is None for v in new_network_value.values())
-                ):
-
-                raise ValueError("현재 네트워크 데이터가 올바르지 않거나 일부 누락되었습니다.")
-            
             # 정상 처리
             status_message = "정상적으로 처리되었습니다."
             status_code = status.HTTP_200_OK
@@ -244,7 +251,7 @@ class SystemServiceImpl(SystemService):
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
 
 
-        # 결과 응답 반환, 네트워크 다운로드/업로드 값은 Impl에서 계산.
+        # 결과 응답 반환
         return GetNetIoCountersDtoResponse(
             old_download_bytes=old_network_value["download_bytes"],
             old_upload_bytes=old_network_value["upload_bytes"],

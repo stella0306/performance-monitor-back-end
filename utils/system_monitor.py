@@ -1,6 +1,6 @@
 import psutil
-import asyncio
-import time
+
+# 간단한 예외처리만 적용, 대부분의 예외처리는 impl에서 처리.
 
 class SystemMonitor:
     # CPU 사용률을 가져오는 메서드
@@ -11,10 +11,6 @@ class SystemMonitor:
         try:
             return psutil.cpu_percent(interval=interval, percpu=percpu)
         
-        except ValueError:
-            # 잘못된 interval 값
-            return None
-        
         except Exception:
             # psutil 내부 오류나 시스템 접근 실패
             return None
@@ -24,14 +20,8 @@ class SystemMonitor:
     def get_cpu_count(logical: bool) -> int | None:
         # logical: True면 논리 코어 포함, False면 물리 코어만
         try:
-            count = psutil.cpu_count(logical=logical)
+            return psutil.cpu_count(logical=logical)
 
-            if count is None:
-                # psutil이 None을 반환한 경우
-                return None
-            
-            return count
-        
         except Exception:
             # psutil 내부 오류
             return None
@@ -45,8 +35,6 @@ class SystemMonitor:
             return {
                 "memory_total_bytes": mem.total,
                 "memory_used_bytes": mem.used,
-                "memory_total_gb": round(mem.total / (1024 ** 3), 2),
-                "memory_used_gb": round(mem.used / (1024 ** 3), 2),
                 "memory_percent": mem.percent,
             }
         
