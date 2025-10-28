@@ -11,6 +11,6 @@ system_controller = SystemController()
 app.include_router(router=system_controller.router, prefix="/system")
 
 
-# 접속 URL: http://localhost:8000/system/./.
+# 접속 URL: http://localhost:8000/api/./.
 if __name__ == "__main__": 
     uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
