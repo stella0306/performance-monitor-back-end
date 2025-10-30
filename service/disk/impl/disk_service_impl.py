@@ -1,6 +1,5 @@
-import asyncio
 from fastapi import status
-from utils.system_monitor import SystemMonitor
+from utils.system.disk.disk_monitor import DiskMonitor
 from utils.validator.value_validator import ValueValidator
 from utils.async_utils.async_runner import AsyncRunner
 from service.disk.disk_service import DiskService

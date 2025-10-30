@@ -1,5 +1,5 @@
 from fastapi import status
-from utils.system_monitor import SystemMonitor
+from utils.system.memory.memory_monitor import MemoryMonitor
 from utils.validator.value_validator import ValueValidator
 from utils.async_utils.async_runner import AsyncRunner
 from dto.response.memory.get_virtual_memory_dto_response import GetVirtualMemoryDtoResponse
@@ -26,7 +26,7 @@ class MemoryServiceImpl(MemoryService):
 
         try:
             # 메모리 정보 수집
-            memory_value = await AsyncRunner.run_in_thread(func=SystemMonitor.get_virtual_memory)
+            memory_value = await AsyncRunner.run_in_thread(func=MemoryMonitor.get_virtual_memory)
 
             # 반환값 검증
             if (

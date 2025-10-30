@@ -1,6 +1,5 @@
-import asyncio
 from fastapi import status
-from utils.system_monitor import SystemMonitor
+from utils.system.cpu.cpu_monitor import CPUMonitor
 from utils.validator.value_validator import ValueValidator
 from utils.async_utils.async_runner import AsyncRunner
 from dto.request.cpu.get_cpu_percent_dto_request import GetCPUPercentDtoRequest
@@ -52,12 +51,12 @@ class CPUServiceImpl(CPUService):
                 if interval < 0.1:
                     raise ValueError("interval은 0.1 이상이어야 합니다. (Blocking)")
                 
-                cpu_value = await AsyncRunner.run_in_thread(SystemMonitor.get_cpu_percent, interval, percpu_state == "on")
+                cpu_value = await AsyncRunner.run_in_thread(CPUMonitor.get_cpu_percent, interval, percpu_state == "on")
                 status_message = "정상적으로 처리되었습니다. (Blocking)"
 
             # Non-blocking 모드
             else:
-                cpu_value = await AsyncRunner.run_in_thread(SystemMonitor.get_cpu_percent, None, percpu_state == "on")
+                cpu_value = await AsyncRunner.run_in_thread(CPUMonitor.get_cpu_percent, None, percpu_state == "on")
                 status_message = "정상적으로 처리되었습니다. (Non-blocking)"
 
         except ValueError as e:
@@ -110,7 +109,7 @@ class CPUServiceImpl(CPUService):
         try:
             # 논리 코어 포함 여부 결정
             include_logical = logical_state == "on"
-            cpu_count = await AsyncRunner.run_in_thread(SystemMonitor.get_cpu_count, include_logical)
+            cpu_count = await AsyncRunner.run_in_thread(CPUMonitor.get_cpu_count, include_logical)
             status_message = f"정상적으로 처리되었습니다. (논리 코어 {'포함' if include_logical else '제외'})"
             status_code = status.HTTP_200_OK
 

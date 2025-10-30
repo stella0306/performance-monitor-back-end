@@ -1,6 +1,5 @@
-import asyncio
 from fastapi import status
-from utils.system_monitor import SystemMonitor
+from utils.system.network.network_monitor import NetworkMonitor
 from utils.validator.value_validator import ValueValidator
 from utils.async_utils.async_runner import AsyncRunner
 from dto.response.network.get_net_io_counters_dto_response import GetNetIoCountersDtoResponse
@@ -27,9 +26,9 @@ class NetworkServiceImpl(NetworkService):
 
         try:
             # 네트워크 정보 수집
-            old_network_value = await AsyncRunner.run_in_thread(func=SystemMonitor.get_net_io_counters)
+            old_network_value = await AsyncRunner.run_in_thread(func=NetworkMonitor.get_net_io_counters)
             await AsyncRunner.sleep_for(delay=measurement_time_delay) # 차이 값 계산을 위해 1초 대기
-            new_network_value = await AsyncRunner.run_in_thread(func=SystemMonitor.get_net_io_counters)
+            new_network_value = await AsyncRunner.run_in_thread(func=NetworkMonitor.get_net_io_counters)
 
 
             # 반환값 검증
@@ -38,6 +37,7 @@ class NetworkServiceImpl(NetworkService):
                 and ValueValidator.is_valid_dict(value=new_network_value, required_keys=network_data)
                 ):
                 raise ValueError("네트워크 데이터가 올바르지 않거나 일부 누락되었습니다.")
+
 
             # 정상 처리
             status_message = "정상적으로 처리되었습니다."
