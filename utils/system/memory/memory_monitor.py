@@ -9,11 +9,11 @@ class MemoryMonitor:
     def get_virtual_memory() -> dict | None:
         # 전체 메모리, 사용량, 사용률 등을 반환
         try:
-            mem = psutil.virtual_memory()
+            memory = psutil.virtual_memory()
             return {
-                "memory_total_bytes": mem.total,
-                "memory_used_bytes": mem.used,
-                "memory_percent": mem.percent,
+                "memory_total_bytes": memory.total,
+                "memory_used_bytes": memory.used,
+                "memory_percent": memory.percent,
             }
         
         except Exception:

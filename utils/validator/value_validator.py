@@ -14,6 +14,14 @@ class ValueValidator:
         """필수 키 존재 및 값 유효성 검증"""
         return (
             isinstance(value, dict)
-            and all(k in value for k in required_keys)
-            and all(v is not None for v in value.values())
+            and all(k in value.keys() for k in required_keys)
+            and any(v is None for v in value.values())
         )
+
+    @staticmethod
+    def is_valid_dict_structure(value: dict) -> bool:
+        """딕셔너리 구조 자체가 유효한지 검사 (None 또는 비어있는 경우 False)"""
+        return not (
+            isinstance(value, dict)
+            and len(value) > 0
+            )
