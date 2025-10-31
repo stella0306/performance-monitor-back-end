@@ -12,16 +12,32 @@ class ValueValidator:
     @staticmethod
     def is_valid_dict(value: dict, required_keys: set[str]) -> bool:
         """필수 키 존재 및 값 유효성 검증"""
-        return (
-            isinstance(value, dict)
-            and all(k in value.keys() for k in required_keys)
-            and any(v is None for v in value.values())
-        )
+        # value가 dict가 아니면 True
+        if not isinstance(value, dict):
+            return True
+        
+        # 필수 키가 하나라도 빠지면 True
+        if not all(k in list(value.keys()) for k in required_keys):
+            return True
+
+        # 값이 None인 항목이 하나라도 있으면 True
+        if any(v is None for v in list(value.values())):
+            return True
+
+        # 위 조건을 모두 통과하면 유효한 딕셔너리
+        return False
 
     @staticmethod
     def is_valid_dict_structure(value: dict) -> bool:
         """딕셔너리 구조 자체가 유효한지 검사 (None 또는 비어있는 경우 False)"""
-        return not (
-            isinstance(value, dict)
-            and len(value) > 0
-            )
+        #  value가 dict가 아니면 False
+        if not isinstance(value, dict):
+            return True
+
+        #  비어 있는지 검사
+        if len(list(value.values())) == 0:
+            return True
+
+        # 위 조건을 모두 통과하면 유효한 딕셔너리
+        return False
+

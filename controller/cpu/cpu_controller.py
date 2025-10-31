@@ -23,15 +23,12 @@ class CPUController:
         self, 
         interval: float = Query(
             default=1, 
-            description="CPU 사용률 측정 간격 (초 단위, 예: 1초마다 측정)"
         ),
         interval_state: str = Query(
             default="off", 
-            description="CPU 측정 시 간격 적용 여부 (on: 지정 간격으로 반복 측정, off: 1회 측정)"
         ),
         percpu_state: str = Query(
             default="off", 
-            description="CPU 사용률 결과 형식 (on: 코어별 개별 사용률, off: 전체 평균 사용률)"
             )
 
         ) -> JSONResponse:
@@ -57,7 +54,6 @@ class CPUController:
         self, 
         logical_state: str = Query(
             default="off", 
-            description="CPU 개수를 반환 (on: 논리 코어 포함, off: 논리 코어 포함 안 함)"
         )
 
         ) -> JSONResponse:
