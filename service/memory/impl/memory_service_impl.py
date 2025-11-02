@@ -26,7 +26,7 @@ class MemoryServiceImpl(MemoryService):
             memory_value = await AsyncRunner.run_in_thread(MemoryMonitor.get_virtual_memory)
 
             # 반환값 검증
-            if ValueValidator.is_valid_dict(value=memory_value, required_keys=required_keys):
+            if not ValueValidator.is_valid_dict(value=memory_value, required_keys=required_keys):
                 return GetVirtualMemoryDtoResponse(
                     memory_total_bytes=0.0,
                     memory_used_bytes=0.0,

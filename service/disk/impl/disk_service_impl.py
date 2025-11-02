@@ -24,7 +24,7 @@ class DiskServiceImpl(DiskService):
             disk_value = await AsyncRunner.run_in_thread(DiskMonitor.disk_usage)
 
             # 전체 구조 검증
-            if ValueValidator.is_valid_dict_structure(value=disk_value):
+            if not ValueValidator.is_valid_dict_structure(value=disk_value):
                 return GetDiskUsageDtoResponse(
                     disk_usage_values={},
                     status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -36,7 +36,7 @@ class DiskServiceImpl(DiskService):
 
             # 드라이브별 검증 및 단위 변환
             for drive, info in disk_value.items():
-                if ValueValidator.is_valid_dict(value=info, required_keys=required_keys):
+                if not ValueValidator.is_valid_dict(value=info, required_keys=required_keys):
                     return GetDiskUsageDtoResponse(
                         disk_usage_values={},
                         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -45,8 +45,8 @@ class DiskServiceImpl(DiskService):
                         end_time="",
                         elapsed_time="",
                     )
-
-                # Bytes → GB 변환 (일반 for문)
+                    
+                # Bytes → GB 변환
                 for key in convert_keys:
                     if key in info:
                         info[f"{key}_gb"] = round(info[key] / (1024 ** 3), 2)

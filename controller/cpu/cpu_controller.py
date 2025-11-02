@@ -16,26 +16,9 @@ class CPUController:
         self.router.get("/cpu_percent")(self.get_cpu_percent)
         self.router.get("/cpu_count")(self.get_cpu_count)
 
-    # 실제 API 메서드 작성
-
     # 초 단위로 측정된 cpu 사용률의 평균 결과를 반환 
-    async def get_cpu_percent(
-        self, 
-        interval: float = Query(
-            default=1, 
-        ),
-        interval_state: str = Query(
-            default="off", 
-        ),
-        percpu_state: str = Query(
-            default="off", 
-            )
-
-        ) -> JSONResponse:
-        
-
-        # 서비스 계층 호출
-        response_dto = await self.cpu_service.get_cpu_percent(
+    async def get_cpu_percent(self, interval: float = Query(default=1), interval_state: str = Query(default="off"), percpu_state: str = Query(default="off")) -> JSONResponse:
+        response = await self.cpu_service.get_cpu_percent(
             getCPUPercentDtoRequest=GetCPUPercentDtoRequest(
                 interval=interval,
                 interval_state=interval_state,
@@ -45,22 +28,13 @@ class CPUController:
 
         # status_code를 포함하여 JSON 응답 반환
         return JSONResponse(
-            status_code=response_dto["status_code"],
-            content=response_dto
+            status_code=response["status_code"],
+            content=response
         )
 
     # cpu 코어 개수를 반환 
-    async def get_cpu_count(
-        self, 
-        logical_state: str = Query(
-            default="off", 
-        )
-
-        ) -> JSONResponse:
-        
-
-        # 서비스 계층 호출
-        response_dto = await self.cpu_service.get_cpu_count(
+    async def get_cpu_count(self, logical_state: str = Query(default="off")) -> JSONResponse:
+        response = await self.cpu_service.get_cpu_count(
             getCPUCountDtoRequest=GetCPUCountDtoRequest(
                 logical_state=logical_state
             )
@@ -68,6 +42,6 @@ class CPUController:
 
         # status_code를 포함하여 JSON 응답 반환
         return JSONResponse(
-            status_code=response_dto["status_code"],
-            content=response_dto
+            status_code=response["status_code"],
+            content=response
         )

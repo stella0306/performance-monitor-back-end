@@ -25,7 +25,7 @@ class NetworkServiceImpl(NetworkService):
             new_network_value = await AsyncRunner.run_in_thread(NetworkMonitor.get_net_io_counters)
 
             # 반환값 검증
-            if (
+            if not (
                 ValueValidator.is_valid_dict(value=old_network_value, required_keys=required_keys)
                 and ValueValidator.is_valid_dict(value=new_network_value, required_keys=required_keys)
                 ):

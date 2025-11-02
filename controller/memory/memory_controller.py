@@ -17,19 +17,12 @@ class MemoryController:
         # 라우터에 메서드 등록 (Spring의 @GetMapping 같은 역할)
         self.router.get("/virtual_memory")(self.get_virtual_memory)
 
-    # 실제 API 메서드 작성
-    
     # 메모리 사용량을 반환 
-    async def get_virtual_memory(
-        self
-        ) -> JSONResponse:
-        
-
-        # 서비스 계층 호출
-        response_dto = await self.memory_service.get_virtual_memory()
+    async def get_virtual_memory(self) -> JSONResponse:
+        response = await self.memory_service.get_virtual_memory()
 
         # status_code를 포함하여 JSON 응답 반환
         return JSONResponse(
-            status_code=response_dto["status_code"],
-            content=response_dto
+            status_code=response["status_code"],
+            content=response
         )
