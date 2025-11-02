@@ -22,19 +22,17 @@ class DiskMonitor:
                 except Exception:
                     continue
 
-                # 키 순서를 명확히 정의한 초기 딕셔너리 생성
-                data = {
+                # 키 순서를 명확히 정의한 초기 딕셔너리 생성 (모든 초기값은 0으로 지정)
+                # 마운트 포인트를 key로 저장
+                result[part.mountpoint] = {
                     "total": usage.total,
                     "used": usage.used,
                     "free": usage.free,
-                    "percent": usage.percent,
-                    "total_gb": round(usage.total / 1024**3, 2),
-                    "used_gb": round(usage.used / 1024**3, 2),
-                    "free_gb": round(usage.free / 1024**3, 2),
+                    "total_gb": 0,
+                    "used_gb": 0,
+                    "free_gb": 0,
+                    "percent": usage.percent
                 }
-
-                # 마운트 포인트를 key로 저장
-                result[part.mountpoint] = data
 
             return result
 
