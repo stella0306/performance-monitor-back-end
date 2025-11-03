@@ -1,10 +1,10 @@
 from fastapi import status
-from utils.system.memory.memory_monitor import MemoryMonitor
-from utils.validator.value_validator import ValueValidator
-from utils.async_utils.async_runner import AsyncRunner
+from core.utils.system.memory_monitor import MemoryMonitor
+from core.utils.validator.value_validator import ValueValidator
+from core.utils.async_utils.async_runner import AsyncRunner
 from domain.memory.dto.response.get_virtual_memory_dto_response import GetVirtualMemoryDtoResponse
 from domain.memory.service.memory_service import MemoryService
-from config.decorators.measure_time import MeasureTime
+from core.config.decorators.measure_time import MeasureTime
 
 
 class MemoryServiceImpl(MemoryService):

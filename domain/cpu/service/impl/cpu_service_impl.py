@@ -1,13 +1,13 @@
 from fastapi import status
-from utils.system.cpu.cpu_monitor import CPUMonitor
-from utils.validator.value_validator import ValueValidator
-from utils.async_utils.async_runner import AsyncRunner
+from core.utils.system.cpu_monitor import CPUMonitor
+from core.utils.validator.value_validator import ValueValidator
+from core.utils.async_utils.async_runner import AsyncRunner
 from domain.cpu.dto.request.get_cpu_percent_dto_request import GetCPUPercentDtoRequest
 from domain.cpu.dto.request.get_cpu_count_dto_request import GetCPUCountDtoRequest
 from domain.cpu.dto.response.get_cpu_percent_dto_response import GetCPUPercentDtoResponse
 from domain.cpu.dto.response.get_cpu_count_dto_response import GetCPUCountDtoResponse
 from domain.cpu.service.cpu_service import CPUService
-from config.decorators.measure_time import MeasureTime
+from core.config.decorators.measure_time import MeasureTime
 
 
 class CPUServiceImpl(CPUService):
