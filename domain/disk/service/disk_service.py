@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from dto.response.disk.get_disk_usage_dto_response import GetDiskUsageDtoResponse
+from domain.disk.dto.response.get_disk_usage_dto_response import GetDiskUsageDtoResponse
 
 # 시스템 기능 추상화 작업입니다.
 

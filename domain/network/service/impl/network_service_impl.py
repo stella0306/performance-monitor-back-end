@@ -2,8 +2,8 @@ from fastapi import status
 from utils.system.network.network_monitor import NetworkMonitor
 from utils.validator.value_validator import ValueValidator
 from utils.async_utils.async_runner import AsyncRunner
-from dto.response.network.get_net_io_counters_dto_response import GetNetIoCountersDtoResponse
-from service.network.network_service import NetworkService
+from domain.network.dto.response.get_net_io_counters_dto_response import GetNetIoCountersDtoResponse
+from domain.network.service.network_service import NetworkService
 from config.decorators.measure_time import MeasureTime
 
 

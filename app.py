@@ -1,9 +1,9 @@
 import uvicorn
 from fastapi import FastAPI
-from controller.cpu.cpu_controller import CPUController
-from controller.memory.memory_controller import MemoryController
-from controller.network.network_controller import NetworkController
-from controller.disk.disk_controller import DiskController
+from domain.cpu.controller.cpu_controller import CPUController
+from domain.disk.controller.disk_controller import DiskController
+from domain.memory.controller.memory_controller import MemoryController
+from domain.network.controller.network_controller import NetworkController
 from config.middleware.cors import CORS
 
 app = FastAPI(title="시스템 API 목록")  # /docs 접속

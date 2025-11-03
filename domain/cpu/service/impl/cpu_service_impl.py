@@ -2,11 +2,11 @@ from fastapi import status
 from utils.system.cpu.cpu_monitor import CPUMonitor
 from utils.validator.value_validator import ValueValidator
 from utils.async_utils.async_runner import AsyncRunner
-from dto.request.cpu.get_cpu_percent_dto_request import GetCPUPercentDtoRequest
-from dto.request.cpu.get_cpu_count_dto_request import GetCPUCountDtoRequest
-from dto.response.cpu.get_cpu_percent_dto_response import GetCPUPercentDtoResponse
-from dto.response.cpu.get_cpu_count_dto_response import GetCPUCountDtoResponse
-from service.cpu.cpu_service import CPUService
+from domain.cpu.dto.request.get_cpu_percent_dto_request import GetCPUPercentDtoRequest
+from domain.cpu.dto.request.get_cpu_count_dto_request import GetCPUCountDtoRequest
+from domain.cpu.dto.response.get_cpu_percent_dto_response import GetCPUPercentDtoResponse
+from domain.cpu.dto.response.get_cpu_count_dto_response import GetCPUCountDtoResponse
+from domain.cpu.service.cpu_service import CPUService
 from config.decorators.measure_time import MeasureTime
 
 

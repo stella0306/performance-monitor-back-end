@@ -2,10 +2,9 @@ from fastapi import status
 from utils.system.disk.disk_monitor import DiskMonitor
 from utils.validator.value_validator import ValueValidator
 from utils.async_utils.async_runner import AsyncRunner
-from dto.response.disk.get_disk_usage_dto_response import GetDiskUsageDtoResponse
-from service.disk.disk_service import DiskService
+from domain.disk.dto.response.get_disk_usage_dto_response import GetDiskUsageDtoResponse
+from domain.disk.service.disk_service import DiskService
 from config.decorators.measure_time import MeasureTime
-
 
 
 class DiskServiceImpl(DiskService):

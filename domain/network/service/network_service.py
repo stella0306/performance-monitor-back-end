@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from dto.response.network.get_net_io_counters_dto_response import GetNetIoCountersDtoResponse
+from domain.network.dto.response.get_net_io_counters_dto_response import GetNetIoCountersDtoResponse
 
 # 시스템 기능 추상화 작업입니다.
 

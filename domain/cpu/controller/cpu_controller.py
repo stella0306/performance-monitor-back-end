@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Query
-from service.cpu.impl.cpu_service_impl import CPUServiceImpl
-from dto.request.cpu.get_cpu_percent_dto_request import GetCPUPercentDtoRequest
-from dto.request.cpu.get_cpu_count_dto_request import GetCPUCountDtoRequest
+from domain.cpu.service.impl.cpu_service_impl import CPUServiceImpl
+from domain.cpu.dto.request.get_cpu_percent_dto_request import GetCPUPercentDtoRequest
+from domain.cpu.dto.request.get_cpu_count_dto_request import GetCPUCountDtoRequest
 from fastapi.responses import JSONResponse
 
 class CPUController:

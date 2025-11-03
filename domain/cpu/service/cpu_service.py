@@ -1,9 +1,8 @@
 from abc import ABC, abstractmethod
-from dto.request.cpu.get_cpu_percent_dto_request import GetCPUPercentDtoRequest
-from dto.request.cpu.get_cpu_count_dto_request import GetCPUCountDtoRequest
-from dto.response.cpu.get_cpu_percent_dto_response import GetCPUPercentDtoResponse
-from dto.response.cpu.get_cpu_count_dto_response import GetCPUCountDtoResponse
-
+from domain.cpu.dto.request.get_cpu_percent_dto_request import GetCPUPercentDtoRequest
+from domain.cpu.dto.request.get_cpu_count_dto_request import GetCPUCountDtoRequest
+from domain.cpu.dto.response.get_cpu_percent_dto_response import GetCPUPercentDtoResponse
+from domain.cpu.dto.response.get_cpu_count_dto_response import GetCPUCountDtoResponse
 # 시스템 기능 추상화 작업입니다.
 
 class CPUService(ABC):

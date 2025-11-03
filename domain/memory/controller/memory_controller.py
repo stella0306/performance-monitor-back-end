@@ -1,9 +1,5 @@
 from fastapi import APIRouter, Query
-from service.memory.impl.memory_service_impl import MemoryServiceImpl
-from dto.request.cpu.get_cpu_percent_dto_request import GetCPUPercentDtoRequest
-from dto.request.cpu.get_cpu_count_dto_request import GetCPUCountDtoRequest
-from dto.response.cpu.get_cpu_percent_dto_response import GetCPUPercentDtoResponse
-from dto.response.cpu.get_cpu_count_dto_response import GetCPUCountDtoResponse
+from domain.memory.service.impl.memory_service_impl import MemoryServiceImpl
 from fastapi.responses import JSONResponse
 
 class MemoryController:

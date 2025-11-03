@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Query
-from service.network.impl.network_service_impl import NetworkServiceImpl
+from domain.network.service.impl.network_service_impl import NetworkServiceImpl
 from fastapi.responses import JSONResponse
 
 class NetworkController:

@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Query
-from service.disk.impl.disk_service_impl import DiskServiceImpl
+from domain.disk.service.impl.disk_service_impl import DiskServiceImpl
 from fastapi.responses import JSONResponse
 
 class DiskController:

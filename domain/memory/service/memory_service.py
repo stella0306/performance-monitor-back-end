@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from dto.response.memory.get_virtual_memory_dto_response import GetVirtualMemoryDtoResponse
+from domain.memory.dto.response.get_virtual_memory_dto_response import GetVirtualMemoryDtoResponse
 
 # 시스템 기능 추상화 작업입니다.
 
