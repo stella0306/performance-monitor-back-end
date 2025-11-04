@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Query
 from domain.disk.service.impl.disk_service_impl import DiskServiceImpl
+from domain.disk.dto.response.get_disk_usage_dto_response import GetDiskUsageDtoResponse
 from fastapi.responses import JSONResponse
 
 class DiskController:
@@ -21,5 +22,5 @@ class DiskController:
         # status_code를 포함하여 JSON 응답 반환
         return JSONResponse(
             status_code=response["status_code"],
-            content=response
+            content=GetDiskUsageDtoResponse(**response).model_dump()
         )

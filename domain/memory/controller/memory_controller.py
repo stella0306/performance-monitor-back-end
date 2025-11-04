@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Query
 from domain.memory.service.impl.memory_service_impl import MemoryServiceImpl
+from domain.memory.dto.response.get_virtual_memory_dto_response import GetVirtualMemoryDtoResponse
 from fastapi.responses import JSONResponse
 
 class MemoryController:
@@ -20,5 +21,5 @@ class MemoryController:
         # status_code를 포함하여 JSON 응답 반환
         return JSONResponse(
             status_code=response["status_code"],
-            content=response
+            content=GetVirtualMemoryDtoResponse(**response).model_dump()
         )

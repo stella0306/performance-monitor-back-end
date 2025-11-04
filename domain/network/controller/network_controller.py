@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Query
 from domain.network.service.impl.network_service_impl import NetworkServiceImpl
+from domain.network.dto.response.get_net_io_counters_dto_response import GetNetIoCountersDtoResponse
 from fastapi.responses import JSONResponse
 
 class NetworkController:
@@ -20,5 +21,5 @@ class NetworkController:
         # status_code를 포함하여 JSON 응답 반환
         return JSONResponse(
             status_code=response["status_code"],
-            content=response
+            content=GetNetIoCountersDtoResponse(**response).model_dump()
         )

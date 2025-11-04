@@ -2,7 +2,10 @@ from fastapi import APIRouter, Query
 from domain.cpu.service.impl.cpu_service_impl import CPUServiceImpl
 from domain.cpu.dto.request.get_cpu_percent_dto_request import GetCPUPercentDtoRequest
 from domain.cpu.dto.request.get_cpu_count_dto_request import GetCPUCountDtoRequest
+from domain.cpu.dto.response.get_cpu_percent_dto_response import GetCPUPercentDtoResponse
+from domain.cpu.dto.response.get_cpu_count_dto_response import GetCPUCountDtoResponse
 from fastapi.responses import JSONResponse
+import json
 
 class CPUController:
     def __init__(self):
@@ -26,11 +29,13 @@ class CPUController:
             )
         )
 
+        
         # status_code를 포함하여 JSON 응답 반환
         return JSONResponse(
             status_code=response["status_code"],
-            content=response
+            content=GetCPUPercentDtoResponse(**response).model_dump()
         )
+        
 
     # cpu 코어 개수를 반환 
     async def get_cpu_count(self, logical_state: str = Query(default="off")) -> JSONResponse:
@@ -43,5 +48,5 @@ class CPUController:
         # status_code를 포함하여 JSON 응답 반환
         return JSONResponse(
             status_code=response["status_code"],
-            content=response
+            content=GetCPUCountDtoResponse(**response).model_dump()
         )
