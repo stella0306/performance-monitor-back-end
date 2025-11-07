@@ -1,5 +1,5 @@
 from fastapi import status
-from core.utils.system.network_monitor import NetworkMonitor
+from core.monitoring.network_monitor import NetworkMonitor
 from core.utils.validator.value_validator import ValueValidator
 from core.utils.async_utils.async_runner import AsyncRunner
 from domain.network.dto.response.get_net_io_counters_dto_response import GetNetIoCountersDtoResponse

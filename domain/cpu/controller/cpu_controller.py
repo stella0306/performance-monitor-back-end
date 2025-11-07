@@ -5,7 +5,6 @@ from domain.cpu.dto.request.get_cpu_count_dto_request import GetCPUCountDtoReque
 from domain.cpu.dto.response.get_cpu_percent_dto_response import GetCPUPercentDtoResponse
 from domain.cpu.dto.response.get_cpu_count_dto_response import GetCPUCountDtoResponse
 from fastapi.responses import JSONResponse
-import json
 
 class CPUController:
     def __init__(self):
@@ -20,7 +19,13 @@ class CPUController:
         self.router.get("/cpu_count")(self.get_cpu_count)
 
     # 초 단위로 측정된 cpu 사용률의 평균 결과를 반환 
-    async def get_cpu_percent(self, interval: float = Query(default=1), interval_state: str = Query(default="off"), percpu_state: str = Query(default="off")) -> JSONResponse:
+    async def get_cpu_percent(
+        self, 
+        interval: float = Query(default=1), 
+        interval_state: str = Query(default="off"), 
+        percpu_state: str = Query(default="off")
+        ) -> JSONResponse:
+        
         response = await self.cpu_service.get_cpu_percent(
             getCPUPercentDtoRequest=GetCPUPercentDtoRequest(
                 interval=interval,
@@ -38,7 +43,10 @@ class CPUController:
         
 
     # cpu 코어 개수를 반환 
-    async def get_cpu_count(self, logical_state: str = Query(default="off")) -> JSONResponse:
+    async def get_cpu_count(
+        self, 
+        logical_state: str = Query(default="off")
+        ) -> JSONResponse:
         response = await self.cpu_service.get_cpu_count(
             getCPUCountDtoRequest=GetCPUCountDtoRequest(
                 logical_state=logical_state

@@ -1,5 +1,5 @@
 from fastapi import status
-from core.utils.system.disk_monitor import DiskMonitor
+from core.monitoring.disk_monitor import DiskMonitor
 from core.utils.validator.value_validator import ValueValidator
 from core.utils.async_utils.async_runner import AsyncRunner
 from domain.disk.dto.response.get_disk_usage_dto_response import GetDiskUsageDtoResponse

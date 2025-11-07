@@ -1,5 +1,5 @@
 from fastapi import status
-from core.utils.system.memory_monitor import MemoryMonitor
+from core.monitoring.memory_monitor import MemoryMonitor
 from core.utils.validator.value_validator import ValueValidator
 from core.utils.async_utils.async_runner import AsyncRunner
 from domain.memory.dto.response.get_virtual_memory_dto_response import GetVirtualMemoryDtoResponse

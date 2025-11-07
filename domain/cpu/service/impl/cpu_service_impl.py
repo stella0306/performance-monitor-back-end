@@ -1,5 +1,5 @@
 from fastapi import status
-from core.utils.system.cpu_monitor import CPUMonitor
+from core.monitoring.cpu_monitor import CPUMonitor
 from core.utils.validator.value_validator import ValueValidator
 from core.utils.async_utils.async_runner import AsyncRunner
 from domain.cpu.dto.request.get_cpu_percent_dto_request import GetCPUPercentDtoRequest
